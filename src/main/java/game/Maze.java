@@ -1,6 +1,8 @@
 package game;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,11 @@ public class Maze {
 
     private Position finish;
 
+    private boolean ready = false;
+
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     static class Position {
         int x;
         int y;
@@ -22,6 +28,16 @@ public class Maze {
     private List<List<Byte>> cells;
 
     public void initialize() {
+        fillCells();
+
+        validate();
+
+        addPositions();
+
+        ready = true;
+    }
+
+    private void fillCells() {
         cells = new ArrayList<>();
 
         for (List<String> strings : level) {
@@ -33,16 +49,6 @@ public class Maze {
 
             cells.add(cellsHelper);
         }
-
-        validate();
-
-        addPositions();
-    }
-
-    private void addPositions() {
-        cells.get(start.getY()).set(start.getX(), (byte) (cells.get(start.getY()).get(start.getX()) | 0b10000));
-
-        cells.get(finish.getY()).set(finish.getX(), (byte) (cells.get(finish.getY()).get(finish.getX()) | 0b100000));
     }
 
     private void validate() throws AssertionError {
@@ -91,5 +97,85 @@ public class Maze {
         if (col != 0) {
             cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b10 & cells.get(row).get(col - 1)) << 2)));
         }
+    }
+
+    private void addPositions() {
+        cells.get(start.getY()).set(start.getX(), (byte) (cells.get(start.getY()).get(start.getX()) | 0b10000));
+
+        cells.get(finish.getY()).set(finish.getX(), (byte) (cells.get(finish.getY()).get(finish.getX()) | 0b100000));
+    }
+
+    public Position findBall() throws AssertionError {
+        for (int i = 0; i < cells.size(); i++) {
+            for (int j = 0; j < cells.get(i).size(); j++) {
+                if ((cells.get(i).get(j) & 0b10000) != 0) {
+                    return new Position(j, i);
+                }
+            }
+        }
+
+        throw new AssertionError("Ball doesn't exist");
+    }
+
+    public void moveRecursive(Direction d) throws AssertionError {
+        if (ready == false) {
+            throw new AssertionError("Maze not ready yet");
+        }
+
+        Movement m = getMovementDetails(d);
+
+        Position p = findBall();
+
+        if (isValidMove(p, m) == false) {
+            return;
+        }
+
+        cells.get(p.getY()).set(p.getX(), (byte) (cells.get(p.getY()).get(p.getX()) & 0b101111));
+
+        Position moveTo = new Position(
+                m.axis == 'x' ? p.getX() + m.getMove() : p.getX(),
+                m.axis == 'y' ? p.getY() + m.getMove() : p.getY()
+        );
+
+        cells.get(moveTo.getY()).set(moveTo.getX(), (byte) (cells.get(moveTo.getY()).get(moveTo.getX()) | 0b10000));
+
+        moveRecursive(d);
+    }
+
+    private byte getMask(Direction d) {
+        byte mask = 0;
+
+        switch (d) {
+            case UP -> mask = 0b1;
+            case DOWN -> mask = 0b100;
+            case LEFT -> mask = 0b1000;
+            case RIGHT -> mask = 0b10;
+        }
+
+        return mask;
+    }
+
+    private char getAxis(Direction d) {
+        return d == Direction.UP || d == Direction.DOWN ? 'y' : 'x';
+    }
+
+    private int getMove(Direction d) {
+        return d == Direction.UP || d == Direction.LEFT ? -1 : 1;
+    }
+
+    @AllArgsConstructor
+    @Data
+    class Movement {
+        int move;
+        char axis;
+        byte mask;
+    }
+
+    private Movement getMovementDetails(Direction d) {
+        return new Movement(getMove(d), getAxis(d), getMask(d));
+    }
+
+    private boolean isValidMove(Position p, Movement m) {
+        return (m.mask & cells.get(p.getY()).get(p.getX())) == 0;
     }
 }
