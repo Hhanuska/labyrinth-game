@@ -1,11 +1,9 @@
 package game;
 
-import java.util.List;
-
 public class Game {
-    private Labyrinth labyrinth;
+    private Maze maze;
 
     public Game() {
-        this.labyrinth = new LabyrinthRepository().getLevel();
+        this.maze = new MazeRepository().getLevel();
     }
 }

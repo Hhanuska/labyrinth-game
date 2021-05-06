@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Labyrinth {
+public class Maze {
     private List<List<String>> level;
 
     private Position start;

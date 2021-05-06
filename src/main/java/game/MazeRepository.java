@@ -1,19 +1,16 @@
 package game;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
-public class LabyrinthRepository {
+public class MazeRepository {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private Labyrinth level;
+    private Maze level;
 
-    public LabyrinthRepository() {
+    public MazeRepository() {
         try {
             loadLevel();
         } catch(IOException e) {
@@ -22,10 +19,10 @@ public class LabyrinthRepository {
     }
 
     private void loadLevel() throws IOException {
-        level = OBJECT_MAPPER.readValue(new File("src/main/resources/game/level.json"), Labyrinth.class);
+        level = OBJECT_MAPPER.readValue(new File("src/main/resources/game/level.json"), Maze.class);
     }
 
-    public Labyrinth getLevel() {
+    public Maze getLevel() {
         return level;
     }
 }
