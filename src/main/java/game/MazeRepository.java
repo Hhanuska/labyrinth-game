@@ -19,7 +19,7 @@ public class MazeRepository {
     }
 
     private void loadLevel() throws IOException {
-        level = OBJECT_MAPPER.readValue(new File("src/main/resources/game/level.json"), Maze.class);
+        level = OBJECT_MAPPER.readValue(new File("target/classes/game/level.json"), Maze.class);
     }
 
     public Maze getLevel() {
