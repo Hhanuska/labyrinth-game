@@ -63,6 +63,7 @@ public class Maze {
     }
 
     private void validate() throws AssertionError {
+        Logger.debug("Validating maze...");
         for (int i = 0; i < cells.size(); i++) {
             for (int j = 0; j < cells.get(i).size(); j++) {
                 ensureSurroundingWalls(i, j);
@@ -81,8 +82,6 @@ public class Maze {
     }
 
     private void ensureSurroundingWalls(int row, int col) {
-        Logger.debug("Ensuring surrounding walls...");
-
         if (row == 0) {
             cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b1));
         }
@@ -101,8 +100,6 @@ public class Maze {
     }
 
     private void ensureDoubleWalls(int row, int col) {
-        Logger.debug("Ensuring double walls...");
-
         if (cells.size() - 1 > row) {
             cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b1 & cells.get(row + 1).get(col)) << 2)));
         }
