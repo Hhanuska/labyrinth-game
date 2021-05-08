@@ -1,6 +1,7 @@
 package game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +14,11 @@ public class MazeRepository {
     public MazeRepository() {
         try {
             loadLevel();
+            Logger.info("Level loaded");
         } catch(IOException e) {
-            throw new AssertionError("Failed to load resource level.json", e);
+            String errMsg = "Failed to load resource level.json";
+            Logger.error(errMsg);
+            throw new AssertionError(errMsg, e);
         }
     }
 

@@ -3,6 +3,7 @@ package game;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,12 @@ public class Maze {
 
     private boolean ready = false;
 
+    private boolean finished = false;
+
+    public boolean getFinished() {
+        return finished;
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -28,6 +35,8 @@ public class Maze {
     private List<List<Byte>> cells;
 
     public void initialize() {
+        Logger.info("Initializing maze...");
+
         fillCells();
 
         validate();
@@ -38,6 +47,8 @@ public class Maze {
     }
 
     private void fillCells() {
+        Logger.debug("Converting strings to bytes...");
+
         cells = new ArrayList<>();
 
         for (List<String> strings : level) {
@@ -59,13 +70,19 @@ public class Maze {
                 ensureDoubleWalls(i, j);
 
                 if (cells.get(i).get(j) > 15) {
-                    throw new AssertionError("Invalid cell at: " + "x: " + j + " y: " + i);
+                    String errMsg = "Invalid cell at: " + "x: " + j + " y: " + i;
+
+                    Logger.error(errMsg);
+
+                    throw new AssertionError(errMsg);
                 }
             }
         }
     }
 
     private void ensureSurroundingWalls(int row, int col) {
+        Logger.debug("Ensuring surrounding walls...");
+
         if (row == 0) {
             cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b1));
         }
@@ -84,6 +101,8 @@ public class Maze {
     }
 
     private void ensureDoubleWalls(int row, int col) {
+        Logger.debug("Ensuring double walls...");
+
         if (cells.size() - 1 > row) {
             cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b1 & cells.get(row + 1).get(col)) << 2)));
         }
@@ -100,6 +119,8 @@ public class Maze {
     }
 
     private void addPositions() {
+        Logger.debug("Adding start and finish positions...");
+
         cells.get(start.getY()).set(start.getX(), (byte) (cells.get(start.getY()).get(start.getX()) | 0b10000));
 
         cells.get(finish.getY()).set(finish.getX(), (byte) (cells.get(finish.getY()).get(finish.getX()) | 0b100000));
@@ -114,12 +135,22 @@ public class Maze {
             }
         }
 
-        throw new AssertionError("Ball doesn't exist");
+        Logger.error("Ball not found");
+
+        throw new AssertionError("Ball not found");
     }
 
     public void moveRecursive(Direction d) throws AssertionError {
         if (ready == false) {
+            Logger.error("Error moving ball before initialization");
+
             throw new AssertionError("Maze not ready yet");
+        }
+
+        if (finished == true) {
+            Logger.warn("Game already finished. No further movement allowed");
+
+            return;
         }
 
         Movement m = getMovementDetails(d);
@@ -127,6 +158,14 @@ public class Maze {
         Position p = findBall();
 
         if (isValidMove(p, m) == false) {
+            Logger.debug("Movement stopped");
+
+            finished = isFinished();
+
+            if (finished) {
+                Logger.info("Game finished");
+            }
+
             return;
         }
 
@@ -177,5 +216,11 @@ public class Maze {
 
     private boolean isValidMove(Position p, Movement m) {
         return (m.mask & cells.get(p.getY()).get(p.getX())) == 0;
+    }
+
+    public boolean isFinished() {
+        Position p = findBall();
+
+        return (cells.get(p.getY()).get(p.getX()) & 0b110000) == 0b110000 ? true : false;
     }
 }
