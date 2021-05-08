@@ -221,6 +221,6 @@ public class Maze {
     public boolean isFinished() {
         Position p = findBall();
 
-        return (cells.get(p.getY()).get(p.getX()) & 0b110000) == 0b110000 ? true : false;
+        return (cells.get(p.getY()).get(p.getX()) & 0b110000) == 0b110000;
     }
 }
