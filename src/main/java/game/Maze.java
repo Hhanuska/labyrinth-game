@@ -8,6 +8,9 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for interacting with the maze.
+ */
 @Data
 public class Maze {
     private List<List<String>> level;
@@ -20,20 +23,19 @@ public class Maze {
 
     private boolean finished = false;
 
-    public boolean getFinished() {
-        return finished;
-    }
-
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     static class Position {
-        int x;
-        int y;
+        private int x;
+        private int y;
     }
 
     private List<List<Byte>> cells;
 
+    /**
+     *
+     */
     public void initialize() {
         Logger.info("Initializing maze...");
 
@@ -71,7 +73,8 @@ public class Maze {
                 ensureDoubleWalls(i, j);
 
                 if (cells.get(i).get(j) > 15) {
-                    String errMsg = "Invalid cell at: " + "x: " + j + " y: " + i;
+                    String errMsg =
+                            "Invalid cell at: " + "x: " + j + " y: " + i;
 
                     Logger.error(errMsg);
 
@@ -81,7 +84,7 @@ public class Maze {
         }
     }
 
-    private void ensureSurroundingWalls(int row, int col) {
+    private void ensureSurroundingWalls(final int row, final int col) {
         if (row == 0) {
             cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b1));
         }
@@ -99,30 +102,52 @@ public class Maze {
         }
     }
 
-    private void ensureDoubleWalls(int row, int col) {
+    private void ensureDoubleWalls(final int row, final int col) {
         if (cells.size() - 1 > row) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b1 & cells.get(row + 1).get(col)) << 2)));
+            cells.get(row).set(col,
+                    (byte) (cells.get(row).get(col)
+                            | ((0b1 & cells.get(row + 1).get(col)) << 2))
+            );
         }
         if (row != 0) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b100 & cells.get(row - 1).get(col)) >> 2)));
+            cells.get(row).set(col,
+                    (byte) (cells.get(row).get(col)
+                            | ((0b100 & cells.get(row - 1).get(col)) >> 2))
+            );
         }
 
         if (cells.get(row).size() - 1 > col) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b1000 & cells.get(row).get(col + 1)) >> 2)));
+            cells.get(row).set(col,
+                    (byte) (cells.get(row).get(col)
+                            | ((0b1000 & cells.get(row).get(col + 1)) >> 2))
+            );
         }
         if (col != 0) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | ((0b10 & cells.get(row).get(col - 1)) << 2)));
+            cells.get(row).set(col,
+                    (byte) (cells.get(row).get(col)
+                            | ((0b10 & cells.get(row).get(col - 1)) << 2))
+            );
         }
     }
 
     private void addPositions() {
         Logger.debug("Adding start and finish positions...");
 
-        cells.get(start.getY()).set(start.getX(), (byte) (cells.get(start.getY()).get(start.getX()) | 0b10000));
+        cells.get(start.getY()).set(start.getX(),
+                (byte) (cells.get(start.getY()).
+                        get(start.getX()) | 0b10000));
 
-        cells.get(finish.getY()).set(finish.getX(), (byte) (cells.get(finish.getY()).get(finish.getX()) | 0b100000));
+        cells.get(finish.getY()).set(finish.getX(),
+                (byte) (cells.get(finish.getY())
+                        .get(finish.getX()) | 0b100000));
     }
 
+    /**
+     * Returns the current position of the ball.
+     *
+     * @return The current position of the ball
+     * @throws AssertionError if the ball doesn't exist
+     */
     public Position findBall() throws AssertionError {
         for (int i = 0; i < cells.size(); i++) {
             for (int j = 0; j < cells.get(i).size(); j++) {
@@ -137,14 +162,20 @@ public class Maze {
         throw new AssertionError("Ball not found");
     }
 
-    public void moveRecursive(Direction d) throws AssertionError {
-        if (ready == false) {
+    /**
+     * Move the ball in the specified direction.
+     *
+     * @param d {@link Direction}
+     * @throws AssertionError if called before initialization
+     */
+    public void moveRecursive(final Direction d) throws AssertionError {
+        if (!ready) {
             Logger.error("Error moving ball before initialization");
 
             throw new AssertionError("Maze not ready yet");
         }
 
-        if (finished == true) {
+        if (finished) {
             Logger.warn("Game already finished. No further movement allowed");
 
             return;
@@ -154,7 +185,7 @@ public class Maze {
 
         Position p = findBall();
 
-        if (isValidMove(p, m) == false) {
+        if (!isValidMove(p, m)) {
             Logger.debug("Movement stopped");
 
             finished = isFinished();
@@ -166,55 +197,61 @@ public class Maze {
             return;
         }
 
-        cells.get(p.getY()).set(p.getX(), (byte) (cells.get(p.getY()).get(p.getX()) & 0b101111));
+        cells.get(p.getY()).set(p.getX(),
+                (byte) (cells.get(p.getY()).get(p.getX()) & 0b101111));
 
         Position moveTo = new Position(
                 m.axis == 'x' ? p.getX() + m.getMove() : p.getX(),
                 m.axis == 'y' ? p.getY() + m.getMove() : p.getY()
         );
 
-        cells.get(moveTo.getY()).set(moveTo.getX(), (byte) (cells.get(moveTo.getY()).get(moveTo.getX()) | 0b10000));
+        cells.get(moveTo.getY()).set(moveTo.getX(),
+                (byte) (cells.get(moveTo.getY()).get(moveTo.getX()) | 0b10000));
 
         moveRecursive(d);
     }
 
-    private byte getMask(Direction d) {
+    private byte getMask(final Direction d) throws AssertionError {
         byte mask = 0;
 
-        switch (d) {
-            case UP -> mask = 0b1;
-            case DOWN -> mask = 0b100;
-            case LEFT -> mask = 0b1000;
-            case RIGHT -> mask = 0b10;
-        }
-
-        return mask;
+        return switch (d) {
+            case UP -> (byte) 0b1;
+            case DOWN -> (byte) 0b100;
+            case LEFT -> (byte) 0b1000;
+            case RIGHT -> (byte) 0b10;
+            default -> throw new AssertionError("Invalid diraction");
+        };
     }
 
-    private char getAxis(Direction d) {
+    private char getAxis(final Direction d) {
         return d == Direction.UP || d == Direction.DOWN ? 'y' : 'x';
     }
 
-    private int getMove(Direction d) {
+    private int getMove(final Direction d) {
         return d == Direction.UP || d == Direction.LEFT ? -1 : 1;
     }
 
     @AllArgsConstructor
     @Data
     class Movement {
-        int move;
-        char axis;
-        byte mask;
+        private int move;
+        private char axis;
+        private byte mask;
     }
 
-    private Movement getMovementDetails(Direction d) {
+    private Movement getMovementDetails(final Direction d) {
         return new Movement(getMove(d), getAxis(d), getMask(d));
     }
 
-    private boolean isValidMove(Position p, Movement m) {
+    private boolean isValidMove(final Position p, final Movement m) {
         return (m.mask & cells.get(p.getY()).get(p.getX())) == 0;
     }
 
+    /**
+     * Returns true if the ball reached the finish.
+     *
+     * @return True if the ball reached the finish
+     */
     public boolean isFinished() {
         Position p = findBall();
 
