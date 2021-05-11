@@ -16,7 +16,7 @@
         </developer>
     </developers>
     <scm>
-        <developerConnection>scm:git:https://github.com/INBPM0420/homework-template-project.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/Hhanuska/maze-game.git</developerConnection>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
