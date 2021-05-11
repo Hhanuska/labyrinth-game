@@ -12,6 +12,8 @@ import java.util.List;
  * Class for interacting with the maze.
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Maze {
     private List<List<String>> level;
 
@@ -23,18 +25,25 @@ public class Maze {
 
     private boolean finished = false;
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    static class Position {
-        private int x;
-        private int y;
+    /**
+     * Creates a Maze object.
+     *
+     * @param level 2D list of binary strings
+     * @param start starting point
+     * @param finish finish point
+     */
+    public Maze(List<List<String>> level, Position start, Position finish) {
+        this.level = level;
+        this.start = start;
+        this.finish = finish;
     }
 
     private List<List<Byte>> cells;
 
     /**
+     * Initialize the maze.
      *
+     * Must be called before using any other method.
      */
     public void initialize() {
         Logger.info("Initializing maze...");
@@ -211,7 +220,7 @@ public class Maze {
         moveRecursive(d);
     }
 
-    private byte getMask(final Direction d) throws AssertionError {
+    private byte getMask(final Direction d) {
         byte mask = 0;
 
         return switch (d) {
@@ -219,7 +228,6 @@ public class Maze {
             case DOWN -> (byte) 0b100;
             case LEFT -> (byte) 0b1000;
             case RIGHT -> (byte) 0b10;
-            default -> throw new AssertionError("Invalid diraction");
         };
     }
 
