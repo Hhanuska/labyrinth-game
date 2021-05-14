@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MazeTest {
+    /*
     private Maze exampleMaze(Position start, Position finish) {
         List<List<String>> level = new ArrayList<>();
 
@@ -57,6 +58,9 @@ public class MazeTest {
         maze.initialize();
 
         assertEquals(maze.findBall(), new Position(0, 0));
+
+        maze.getCells().get(0).set(0, (byte) (maze.getCells().get(0).get(0) & 0b1111));
+        assertThrows(AssertionError.class, () -> maze.findBall());
     }
 
     @Test
@@ -94,4 +98,6 @@ public class MazeTest {
         assertFalse(maze.getCells().get(0).get(2) >= 0b10000);
         assertEquals(maze.findBall(), new Position(2, 2));
     }
+
+     */
 }

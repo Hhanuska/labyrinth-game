@@ -1,5 +1,9 @@
 package game;
 
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,7 +42,7 @@ public class Maze {
         this.finish = finish;
     }
 
-    private List<List<Byte>> cells;
+    private ReadOnlyIntegerWrapper[][] cells = new ReadOnlyIntegerWrapper[7][7];
 
     /**
      * Initialize the maze.
@@ -60,28 +64,24 @@ public class Maze {
     private void fillCells() {
         Logger.debug("Converting strings to bytes...");
 
-        cells = new ArrayList<>();
+        for (int i = 0; i < level.size(); i++) {
+            for (int j = 0; j < level.get(i).size(); j++) {
+                String binaryString = level.get(i).get(j);
 
-        for (List<String> strings : level) {
-            List<Byte> cellsHelper = new ArrayList<>();
-
-            for (String string : strings) {
-                cellsHelper.add(Byte.parseByte(string, 2));
+                cells[i][j] = new ReadOnlyIntegerWrapper(Integer.parseInt(binaryString, 2));
             }
-
-            cells.add(cellsHelper);
         }
     }
 
     private void validate() throws AssertionError {
         Logger.debug("Validating maze...");
-        for (int i = 0; i < cells.size(); i++) {
-            for (int j = 0; j < cells.get(i).size(); j++) {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
                 ensureSurroundingWalls(i, j);
 
                 ensureDoubleWalls(i, j);
 
-                if (cells.get(i).get(j) > 15) {
+                if (cells[i][j].get() > 15) {
                     String errMsg =
                             "Invalid cell at: " + "x: " + j + " y: " + i;
 
@@ -95,60 +95,44 @@ public class Maze {
 
     private void ensureSurroundingWalls(final int row, final int col) {
         if (row == 0) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b1));
+            cells[row][col].set((cells[row][col].get() | 0b1));
         }
 
-        if (row == cells.size() - 1) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b100));
+        if (row == cells.length - 1) {
+            cells[row][col].set((cells[row][col].get() | 0b100));
         }
 
         if (col == 0) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b1000));
+            cells[row][col].set((cells[row][col].get() | 0b1000));
         }
 
-        if (col == cells.get(row).size() - 1) {
-            cells.get(row).set(col, (byte) (cells.get(row).get(col) | 0b10));
+        if (col == cells[row].length - 1) {
+            cells[row][col].set((cells[row][col].get() | 0b10));
         }
     }
 
     private void ensureDoubleWalls(final int row, final int col) {
-        if (cells.size() - 1 > row) {
-            cells.get(row).set(col,
-                    (byte) (cells.get(row).get(col)
-                            | ((0b1 & cells.get(row + 1).get(col)) << 2))
-            );
+        if (cells.length - 1 > row) {
+            cells[row][col].set((cells[row][col].get() | ((0b1 & cells[row + 1][col].get()) << 2)));
         }
         if (row != 0) {
-            cells.get(row).set(col,
-                    (byte) (cells.get(row).get(col)
-                            | ((0b100 & cells.get(row - 1).get(col)) >> 2))
-            );
+            cells[row][col].set((cells[row][col].get() | ((0b100 & cells[row - 1][col].get()) >> 2)));
         }
 
-        if (cells.get(row).size() - 1 > col) {
-            cells.get(row).set(col,
-                    (byte) (cells.get(row).get(col)
-                            | ((0b1000 & cells.get(row).get(col + 1)) >> 2))
-            );
+        if (cells[row].length - 1 > col) {
+            cells[row][col].set((cells[row][col].get() | ((0b1000 & cells[row][col + 1].get()) >> 2)));
         }
         if (col != 0) {
-            cells.get(row).set(col,
-                    (byte) (cells.get(row).get(col)
-                            | ((0b10 & cells.get(row).get(col - 1)) << 2))
-            );
+            cells[row][col].set((cells[row][col].get() | ((0b10 & cells[row][col - 1].get()) << 2)));
         }
     }
 
     private void addPositions() {
         Logger.debug("Adding start and finish positions...");
 
-        cells.get(start.getY()).set(start.getX(),
-                (byte) (cells.get(start.getY()).
-                        get(start.getX()) | 0b10000));
+        cells[start.getY()][start.getX()].set((cells[start.getY()][start.getX()].get() | 0b10000));
 
-        cells.get(finish.getY()).set(finish.getX(),
-                (byte) (cells.get(finish.getY())
-                        .get(finish.getX()) | 0b100000));
+        cells[finish.getY()][finish.getX()].set((cells[finish.getY()][finish.getX()].get() | 0b100000));
     }
 
     /**
@@ -158,9 +142,9 @@ public class Maze {
      * @throws AssertionError if the ball doesn't exist
      */
     public Position findBall() throws AssertionError {
-        for (int i = 0; i < cells.size(); i++) {
-            for (int j = 0; j < cells.get(i).size(); j++) {
-                if ((cells.get(i).get(j) & 0b10000) != 0) {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if ((cells[i][j].get() & 0b10000) != 0) {
                     return new Position(j, i);
                 }
             }
@@ -206,28 +190,24 @@ public class Maze {
             return;
         }
 
-        cells.get(p.getY()).set(p.getX(),
-                (byte) (cells.get(p.getY()).get(p.getX()) & 0b101111));
+        cells[p.getY()][p.getX()].set((cells[p.getY()][p.getX()].get() & 0b101111));
 
         Position moveTo = new Position(
                 m.axis == 'x' ? p.getX() + m.getMove() : p.getX(),
                 m.axis == 'y' ? p.getY() + m.getMove() : p.getY()
         );
 
-        cells.get(moveTo.getY()).set(moveTo.getX(),
-                (byte) (cells.get(moveTo.getY()).get(moveTo.getX()) | 0b10000));
+        cells[moveTo.getY()][moveTo.getX()].set((cells[moveTo.getY()][moveTo.getX()].get() | 0b10000));
 
         moveRecursive(d);
     }
 
-    private byte getMask(final Direction d) {
-        byte mask = 0;
-
+    private int getMask(final Direction d) {
         return switch (d) {
-            case UP -> (byte) 0b1;
-            case DOWN -> (byte) 0b100;
-            case LEFT -> (byte) 0b1000;
-            case RIGHT -> (byte) 0b10;
+            case UP -> 0b1;
+            case DOWN -> 0b100;
+            case LEFT -> 0b1000;
+            case RIGHT -> 0b10;
         };
     }
 
@@ -244,7 +224,7 @@ public class Maze {
     class Movement {
         private int move;
         private char axis;
-        private byte mask;
+        private int mask;
     }
 
     private Movement getMovementDetails(final Direction d) {
@@ -252,7 +232,7 @@ public class Maze {
     }
 
     private boolean isValidMove(final Position p, final Movement m) {
-        return (m.mask & cells.get(p.getY()).get(p.getX())) == 0;
+        return (m.mask & cells[p.getY()][p.getX()].get()) == 0;
     }
 
     /**
@@ -263,6 +243,6 @@ public class Maze {
     public boolean isFinished() {
         Position p = findBall();
 
-        return (cells.get(p.getY()).get(p.getX()) & 0b110000) == 0b110000;
+        return (cells[p.getY()][p.getX()].get() & 0b110000) == 0b110000;
     }
 }
