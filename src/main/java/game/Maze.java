@@ -1,15 +1,11 @@
 package game;
 
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.ReadOnlyListWrapper;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +38,7 @@ public class Maze {
         this.finish = finish;
     }
 
-    private ReadOnlyIntegerWrapper[][] cells = new ReadOnlyIntegerWrapper[7][7];
+    private ReadOnlyIntegerWrapper[][] cells;
 
     /**
      * Initialize the maze.
@@ -63,6 +59,8 @@ public class Maze {
 
     private void fillCells() {
         Logger.debug("Converting strings to bytes...");
+
+        cells = new ReadOnlyIntegerWrapper[level.size()][level.get(0).size()];
 
         for (int i = 0; i < level.size(); i++) {
             for (int j = 0; j < level.get(i).size(); j++) {
@@ -193,8 +191,8 @@ public class Maze {
         cells[p.getY()][p.getX()].set((cells[p.getY()][p.getX()].get() & 0b101111));
 
         Position moveTo = new Position(
-                m.axis == 'x' ? p.getX() + m.getMove() : p.getX(),
-                m.axis == 'y' ? p.getY() + m.getMove() : p.getY()
+                m.getAxis() == 'x' ? p.getX() + m.getMove() : p.getX(),
+                m.getAxis() == 'y' ? p.getY() + m.getMove() : p.getY()
         );
 
         cells[moveTo.getY()][moveTo.getX()].set((cells[moveTo.getY()][moveTo.getX()].get() | 0b10000));
@@ -219,20 +217,12 @@ public class Maze {
         return d == Direction.UP || d == Direction.LEFT ? -1 : 1;
     }
 
-    @AllArgsConstructor
-    @Data
-    class Movement {
-        private int move;
-        private char axis;
-        private int mask;
-    }
-
     private Movement getMovementDetails(final Direction d) {
         return new Movement(getMove(d), getAxis(d), getMask(d));
     }
 
     private boolean isValidMove(final Position p, final Movement m) {
-        return (m.mask & cells[p.getY()][p.getX()].get()) == 0;
+        return (m.getMask() & cells[p.getY()][p.getX()].get()) == 0;
     }
 
     /**

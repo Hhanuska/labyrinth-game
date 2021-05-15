@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MazeTest {
-    /*
     private Maze exampleMaze(Position start, Position finish) {
         List<List<String>> level = new ArrayList<>();
 
@@ -38,18 +37,19 @@ public class MazeTest {
     @Test
     public void testInit() {
         Maze maze = exampleMaze(new Position(0, 0), new Position(2, 2));
+        System.out.println(maze.getLevel());
         maze.initialize();
 
-        assertTrue(maze.getCells().get(0).get(0) > (byte) 0b10000);
-        assertTrue(maze.getCells().get(2).get(2) > (byte) 0b100000);
+        assertTrue(maze.getCells()[0][0].get() > 0b10000);
+        assertTrue(maze.getCells()[2][2].get() > 0b100000);
 
-        assertEquals(maze.getCells().get(0).get(2), (byte) 0b1011);
-        assertEquals(maze.getCells().get(1).get(0), (byte) 0b1100);
-        assertEquals(maze.getCells().get(1).get(1), (byte) 0b0001);
-        assertEquals(maze.getCells().get(1).get(2), (byte) 0b0010);
-        assertEquals(maze.getCells().get(2).get(0), (byte) 0b1101);
-        assertEquals(maze.getCells().get(2).get(1), (byte) 0b0100);
-        assertEquals(maze.getCells().get(2).get(2), (byte) 0b100110);
+        assertEquals(maze.getCells()[0][2].get(), 0b1011);
+        assertEquals(maze.getCells()[1][0].get(), 0b1100);
+        assertEquals(maze.getCells()[1][1].get(), 0b0001);
+        assertEquals(maze.getCells()[1][2].get(), 0b0010);
+        assertEquals(maze.getCells()[2][0].get(), 0b1101);
+        assertEquals(maze.getCells()[2][1].get(), 0b0100);
+        assertEquals(maze.getCells()[2][2].get(), 0b100110);
     }
 
     @Test
@@ -59,8 +59,8 @@ public class MazeTest {
 
         assertEquals(maze.findBall(), new Position(0, 0));
 
-        maze.getCells().get(0).set(0, (byte) (maze.getCells().get(0).get(0) & 0b1111));
-        assertThrows(AssertionError.class, () -> maze.findBall());
+        maze.getCells()[0][0].set(maze.getCells()[0][0].get() & 0b1111);
+        assertThrows(AssertionError.class, maze::findBall);
     }
 
     @Test
@@ -95,9 +95,7 @@ public class MazeTest {
         assertTrue(maze.isFinished());
 
         maze.moveRecursive(Direction.UP);
-        assertFalse(maze.getCells().get(0).get(2) >= 0b10000);
+        assertFalse(maze.getCells()[0][2].get() >= 0b10000);
         assertEquals(maze.findBall(), new Position(2, 2));
     }
-
-     */
 }
