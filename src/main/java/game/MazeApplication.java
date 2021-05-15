@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
+/**
+ * Class responsible for interacting with JavaFX.
+ */
 public class MazeApplication extends Application {
 
     @Override

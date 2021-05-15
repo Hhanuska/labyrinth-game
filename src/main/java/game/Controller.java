@@ -14,6 +14,9 @@ import org.tinylog.Logger;
 
 import javafx.scene.input.KeyEvent;
 
+/**
+ * Class responsible for game controls.
+ */
 public class Controller {
     @FXML
     private GridPane board;
