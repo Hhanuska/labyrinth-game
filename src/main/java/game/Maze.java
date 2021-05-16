@@ -148,6 +148,7 @@ public class Maze {
 
     /**
      * Restart the game.
+     * Reinitialization required
      */
     public void restart() {
         if (!ready) {
