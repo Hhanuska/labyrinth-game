@@ -1,10 +1,7 @@
 package game;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Arrays;
 
 /**
  * Class for handling high scores.
@@ -23,7 +20,7 @@ public class HighScores {
      * @param hs {@link HighScore}
      */
     public void addScore(HighScore hs) {
-        if (scores.length == 0) {
+        if (scores == null || scores.length == 0) {
             scores = new HighScore[MAX_LENGTH];
         }
 
