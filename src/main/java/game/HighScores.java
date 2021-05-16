@@ -10,6 +10,7 @@ import java.util.Arrays;
  * Class for handling high scores.
  */
 @Data
+@NoArgsConstructor
 public class HighScores {
     private int MAX_LENGTH = 5;
 

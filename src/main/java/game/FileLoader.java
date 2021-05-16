@@ -18,19 +18,15 @@ public class FileLoader {
 
     /**
      * Loads the information about the maze.
-     *
-     * @throws IOException if the file doesn't exist
      */
     public static void loadLevel() throws IOException {
         level = OBJECT_MAPPER.readValue(
-                new File("target/classes/game/level.json"), Maze.class
+            new File("target/classes/game/level.json"), Maze.class
         );
     }
 
     /**
      * Loads the high scores.
-     *
-     * @throws IOException if the file doesn't exist
      */
     public static void loadHighScores() throws IOException {
         highScores = OBJECT_MAPPER.readValue(
