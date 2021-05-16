@@ -150,6 +150,10 @@ public class Maze {
      * Restart the game.
      */
     public void restart() {
+        if (!ready) {
+            return;
+        }
+
         removePositions();
 
         finished = false;

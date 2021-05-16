@@ -15,8 +15,16 @@ public class MazeApplication extends Application {
 
     private static Scene scene;
 
+    private static String name;
+
+    private static HighScores highScores;
+
     @Override
     public void start(Stage stage) throws IOException {
+        MazeRepository.loadLevel();
+        MazeRepository.loadHighScores();
+        highScores = MazeRepository.getHighScores();
+
         Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         stage.setTitle("Maze Game");
         scene = new Scene(root);
@@ -31,5 +39,17 @@ public class MazeApplication extends Application {
 
     public static void setScene(Scene s) {
         scene = s;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String n) {
+        name = n;
+    }
+
+    public static HighScores getHighScores() {
+        return highScores;
     }
 }

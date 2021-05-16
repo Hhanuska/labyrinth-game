@@ -12,25 +12,19 @@ import java.io.IOException;
 public class MazeRepository {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private Maze level;
+    private static Maze level;
 
-    /**
-     * Creates a MazeRepository object.
-     */
-    public MazeRepository() {
-        try {
-            loadLevel();
-            Logger.info("Level loaded");
-        } catch (IOException e) {
-            String errMsg = "Failed to load resource level.json";
-            Logger.error(errMsg);
-            throw new AssertionError(errMsg, e);
-        }
-    }
+    private static HighScores highScores;
 
-    private void loadLevel() throws IOException {
+    public static void loadLevel() throws IOException {
         level = OBJECT_MAPPER.readValue(
                 new File("target/classes/game/level.json"), Maze.class
+        );
+    }
+
+    public static void loadHighScores() throws IOException {
+        highScores = OBJECT_MAPPER.readValue(
+                new File("target/classes/game/highscores.json"), HighScores.class
         );
     }
 
@@ -39,7 +33,11 @@ public class MazeRepository {
      *
      * @return The loaded information about the maze
      */
-    public Maze getLevel() {
+    public static Maze getLevel() {
         return level;
+    }
+
+    public static HighScores getHighScores() {
+        return highScores;
     }
 }

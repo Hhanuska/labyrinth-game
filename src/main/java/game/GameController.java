@@ -1,5 +1,6 @@
 package game;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,9 +19,12 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import javafx.scene.input.KeyEvent;
 
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -33,14 +37,17 @@ public class GameController {
     @FXML
     private Label stopwatchLabel;
 
-    private final Maze model = new MazeRepository().getLevel();
+    private final Maze model = MazeRepository.getLevel();
 
     private final Stopwatch stopwatch = new Stopwatch();
+
+    private FileWriter file;
 
     @FXML
     private void initialize() {
         Logger.info("Initializing UI...");
 
+        model.restart();
         model.initialize();
 
         for (int i = 1; i < board.getRowCount(); i++) {
@@ -157,5 +164,47 @@ public class GameController {
         }
 
         stopwatch.stop();
+
+        Logger.info(
+                "Game finished by {} in {}",
+                MazeApplication.getName(),
+                stopwatch.mmssSSProperty().getValue()
+        );
+
+        MazeApplication.getHighScores().addScore(new HighScore(MazeApplication.getName(), stopwatch.millisProperty().get()));
+
+        try {
+            file = new FileWriter("target/classes/game/highscores.json");
+
+            JSONObject obj = new JSONObject();
+            obj.put("scores", scoresToJson());
+
+            file.write(obj.toJSONString());
+        } catch (IOException e) {
+            Logger.error(e);
+        } finally {
+            try {
+                file.flush();
+                file.close();
+            } catch (IOException e) {
+                Logger.error(e);
+            }
+        }
+    }
+
+    private JSONArray scoresToJson() {
+        JSONArray arr = new JSONArray();
+
+        for (int i = 0; i < MazeApplication.getHighScores().getScores().length; i++) {
+            JSONObject obj = new JSONObject();
+            if (MazeApplication.getHighScores().getScores()[i] != null) {
+                obj.put("name", MazeApplication.getHighScores().getScores()[i].getName());
+                obj.put("time", MazeApplication.getHighScores().getScores()[i].getTime());
+            }
+
+            arr.add(obj);
+        }
+
+        return arr;
     }
 }

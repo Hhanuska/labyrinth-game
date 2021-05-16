@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -18,7 +19,16 @@ public class MenuController {
     private GridPane menu;
 
     @FXML
+    private TextField nameField;
+
+    @FXML
     private void handleStart(ActionEvent event) throws IOException {
+        String name = nameField.getText();
+        if (name.length() < 3) {
+            return;
+        }
+        MazeApplication.setName(name);
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
 

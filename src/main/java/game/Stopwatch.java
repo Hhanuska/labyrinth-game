@@ -25,7 +25,7 @@ public class Stopwatch {
         }), new KeyFrame(Duration.millis(1)));
 
         timeline.setCycleCount(Animation.INDEFINITE);
-        mmssSS.bind(Bindings.createStringBinding(() -> DurationFormatUtils.formatDuration(millis.get(), "mm:ss:SS"), millis));
+        mmssSS.bind(Bindings.createStringBinding(() -> DurationFormatUtils.formatDuration(millis.get(), "mm:ss.SS"), millis));
     }
 
     public LongProperty millisProperty() {
