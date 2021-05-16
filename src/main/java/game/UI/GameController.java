@@ -1,5 +1,9 @@
-package game;
+package game.UI;
 
+import game.model.Direction;
+import game.FileLoader;
+import game.model.HighScore;
+import game.model.Maze;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,7 +48,7 @@ public class GameController {
 
     @FXML
     private void initialize() {
-        Logger.info("Initializing UI...");
+        Logger.info("Initializing game.UI...");
 
         model.restart();
         model.initialize();
@@ -148,7 +152,7 @@ public class GameController {
     @FXML
     private void handleBack(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
 
         Scene scene = new Scene(root);
         stage.setScene(scene);

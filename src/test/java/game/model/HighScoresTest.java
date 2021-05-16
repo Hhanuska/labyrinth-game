@@ -1,5 +1,7 @@
-package game;
+package game.model;
 
+import game.model.HighScore;
+import game.model.HighScores;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

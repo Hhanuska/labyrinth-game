@@ -1,7 +1,10 @@
-package game;
+package game.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import game.model.Direction;
+import game.model.Maze;
+import game.model.Position;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

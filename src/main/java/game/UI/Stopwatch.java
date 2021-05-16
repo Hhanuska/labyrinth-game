@@ -1,4 +1,4 @@
-package game;
+package game.UI;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

@@ -1,5 +1,6 @@
 package game;
 
+import game.UI.MazeApplication;
 import javafx.application.Application;
 
 /**

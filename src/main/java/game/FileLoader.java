@@ -1,7 +1,8 @@
 package game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.tinylog.Logger;
+import game.model.HighScores;
+import game.model.Maze;
 
 import java.io.File;
 import java.io.IOException;

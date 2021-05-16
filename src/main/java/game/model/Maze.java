@@ -1,4 +1,4 @@
-package game;
+package game.model;
 
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import lombok.AllArgsConstructor;

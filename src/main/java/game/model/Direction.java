@@ -1,4 +1,4 @@
-package game;
+package game.model;
 
 /**
  * Enum to specify the directions the ball can move.

@@ -1,4 +1,4 @@
-package game;
+package game.UI;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -33,7 +33,7 @@ public class MenuController {
         MazeApplication.setName(name);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/game.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/game.fxml"));
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -46,7 +46,7 @@ public class MenuController {
     @FXML
     private void handleHs(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/highscores.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/highscores.fxml"));
 
         Scene scene = new Scene(root);
         stage.setScene(scene);

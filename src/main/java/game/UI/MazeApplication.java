@@ -1,6 +1,9 @@
-package game;
+package game.UI;
 
 import java.io.IOException;
+
+import game.FileLoader;
+import game.model.HighScores;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,7 +27,7 @@ public class MazeApplication extends Application {
         FileLoader.loadHighScores();
         highScores = FileLoader.getHighScores();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
         stage.setTitle("Maze Game");
         scene = new Scene(root);
         stage.setScene(scene);

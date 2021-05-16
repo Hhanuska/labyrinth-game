@@ -1,4 +1,4 @@
-package game;
+package game.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package game;
+package game.UI;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,7 +55,7 @@ public class HsController {
     @FXML
     private void handleBack(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
