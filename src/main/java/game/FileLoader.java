@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Class responsible for loading mazes.
+ * Class responsible for loading mazes and high scores.
  */
-public class MazeRepository {
+public class FileLoader {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private static Maze level;

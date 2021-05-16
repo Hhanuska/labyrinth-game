@@ -32,7 +32,7 @@
             <Font size="42.0" />
          </font>
       </Button>
-      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="High Scores" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
+      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleHs" text="High Scores" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
          <font>
             <Font size="34.0" />
          </font>

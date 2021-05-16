@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -21,9 +20,9 @@ public class MazeApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        MazeRepository.loadLevel();
-        MazeRepository.loadHighScores();
-        highScores = MazeRepository.getHighScores();
+        FileLoader.loadLevel();
+        FileLoader.loadHighScores();
+        highScores = FileLoader.getHighScores();
 
         Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         stage.setTitle("Maze Game");

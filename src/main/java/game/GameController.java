@@ -1,6 +1,5 @@
 package game;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,7 +36,7 @@ public class GameController {
     @FXML
     private Label stopwatchLabel;
 
-    private final Maze model = MazeRepository.getLevel();
+    private final Maze model = FileLoader.getLevel();
 
     private final Stopwatch stopwatch = new Stopwatch();
 
