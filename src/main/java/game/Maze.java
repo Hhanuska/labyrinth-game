@@ -134,6 +134,28 @@ public class Maze {
     }
 
     /**
+     * Remove the ball and the finish from the board.
+     */
+    private void removePositions() {
+        Logger.debug("Removing ball and finish position...");
+
+        for (ReadOnlyIntegerWrapper[] cell : cells) {
+            for (ReadOnlyIntegerWrapper readOnlyIntegerWrapper : cell) {
+                readOnlyIntegerWrapper.set(readOnlyIntegerWrapper.get() & 0b1111);
+            }
+        }
+    }
+
+    /**
+     * Restart the game.
+     */
+    public void restart() {
+        removePositions();
+
+        finished = false;
+    }
+
+    /**
      * Returns the current position of the ball.
      *
      * @return The current position of the ball

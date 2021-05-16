@@ -13,17 +13,23 @@ import javafx.stage.Stage;
  */
 public class MazeApplication extends Application {
 
+    private static Scene scene;
+
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
         stage.setTitle("Maze Game");
-        Scene scene = new Scene(root);
+        scene = new Scene(root);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
-
-        // For key press event
-        scene.getRoot().requestFocus();
     }
 
+    public static Scene getScene() {
+        return scene;
+    }
+
+    public static void setScene(Scene s) {
+        scene = s;
+    }
 }
