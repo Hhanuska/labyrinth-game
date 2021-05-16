@@ -16,12 +16,22 @@ public class FileLoader {
 
     private static HighScores highScores;
 
+    /**
+     * Loads the information about the maze.
+     *
+     * @throws IOException if the file doesn't exist
+     */
     public static void loadLevel() throws IOException {
         level = OBJECT_MAPPER.readValue(
                 new File("target/classes/game/level.json"), Maze.class
         );
     }
 
+    /**
+     * Loads the high scores.
+     *
+     * @throws IOException if the file doesn't exist
+     */
     public static void loadHighScores() throws IOException {
         highScores = OBJECT_MAPPER.readValue(
                 new File("target/classes/game/highscores.json"), HighScores.class
@@ -37,6 +47,11 @@ public class FileLoader {
         return level;
     }
 
+    /**
+     * Returns the loaded high scores.
+     *
+     * @return The loaded high scores
+     */
     public static HighScores getHighScores() {
         return highScores;
     }

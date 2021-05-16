@@ -12,6 +12,9 @@ import javafx.util.Duration;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+/**
+ * Class responsible for measuring time.
+ */
 public class Stopwatch {
 
     private LongProperty millis = new SimpleLongProperty();
@@ -19,6 +22,9 @@ public class Stopwatch {
 
     private Timeline timeline;
 
+    /**
+     * Creates a Stopwatch object.
+     */
     public Stopwatch() {
         timeline = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             millis.set(millis.get() + 1);
@@ -28,39 +34,45 @@ public class Stopwatch {
         mmssSS.bind(Bindings.createStringBinding(() -> DurationFormatUtils.formatDuration(millis.get(), "mm:ss.SS"), millis));
     }
 
+    /**
+     * Returns the time on the stopwatch in ms.
+     *
+     * @return The time on the stopwatch in ms
+     */
     public LongProperty millisProperty() {
         return millis;
     }
 
+    /**
+     * Returns the time on the stopwatch as mm:ss:SSS.
+     *
+     * @return time on the stopwatch as mm:ss:SSS
+     */
     public StringProperty mmssSSProperty() {
         return mmssSS;
     }
 
+    /**
+     * Starts the stopwatch.
+     */
     public void start() {
         timeline.play();
     }
 
+    /**
+     * Stops the stopwatch.
+     */
     public void stop() {
         timeline.pause();
     }
 
-    public void restart() {
-        stop();
-
-        reset();
-
-        start();
-    }
-
+    /**
+     * Resets the stopwatch.
+     */
     public void reset() {
         if (timeline.getStatus() != Animation.Status.PAUSED) {
             throw new IllegalStateException();
         }
         millis.set(0);
     }
-
-    public Animation.Status getStatus() {
-        return timeline.getStatus();
-    }
-
 }

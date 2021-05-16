@@ -32,6 +32,7 @@ public class MazeApplication extends Application {
         stage.show();
     }
 
+    //CHECKSTYLE:OFF
     public static Scene getScene() {
         return scene;
     }

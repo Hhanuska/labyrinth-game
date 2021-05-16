@@ -14,6 +14,9 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
+/**
+ * Controller for the main menu page.
+ */
 public class MenuController {
     @FXML
     private GridPane menu;

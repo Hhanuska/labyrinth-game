@@ -15,6 +15,9 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.io.IOException;
 
+/**
+ * Controller for the high scores page.
+ */
 public class HsController {
     @FXML
     private GridPane board;

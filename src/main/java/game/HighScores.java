@@ -6,12 +6,21 @@ import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 
+/**
+ * Class for handling high scores.
+ */
 @Data
 public class HighScores {
     private int MAX_LENGTH = 5;
 
     private HighScore[] scores;
 
+    /**
+     * Attempt to add a score to the high scores.
+     * If the score is worse than all of the high scores and the list is full, nothing happens
+     *
+     * @param hs {@link HighScore}
+     */
     public void addScore(HighScore hs) {
         if (scores.length == 0) {
             scores = new HighScore[MAX_LENGTH];
