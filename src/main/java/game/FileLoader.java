@@ -22,7 +22,7 @@ public class FileLoader {
      */
     public static void loadLevel() throws IOException {
         level = OBJECT_MAPPER.readValue(
-            new File("target/classes/game/level.json"), Maze.class
+            FileLoader.class.getResourceAsStream("level.json"), Maze.class
         );
     }
 
@@ -31,7 +31,7 @@ public class FileLoader {
      */
     public static void loadHighScores() throws IOException {
         highScores = OBJECT_MAPPER.readValue(
-                new File("target/classes/game/highscores.json"), HighScores.class
+                FileLoader.class.getResourceAsStream("highscores.json"), HighScores.class
         );
     }
 
