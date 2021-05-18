@@ -1,7 +1,16 @@
 package game.model;
 
+import game.UI.MazeApplication;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Class for handling high scores.
@@ -12,6 +21,8 @@ public class HighScores {
     private int MAX_LENGTH = 5;
 
     private HighScore[] scores;
+
+    private StringProperty filePath = new SimpleStringProperty(null);
 
     /**
      * Attempt to add a score to the high scores.
@@ -88,5 +99,38 @@ public class HighScores {
                 }
             }
         }
+    }
+
+    public void save() throws IOException {
+        if (filePath.get() == null) {
+            throw new IllegalStateException();
+        }
+
+        saveAs(filePath.get());
+    }
+
+    public void saveAs(String filePath) throws IOException {
+        JSONObject obj = new JSONObject();
+        obj.put("scores", scoresToJson());
+
+        Files.writeString(Path.of(filePath), obj.toJSONString());
+
+        this.filePath.set(filePath);
+    }
+
+    private JSONArray scoresToJson() {
+        JSONArray arr = new JSONArray();
+
+        for (int i = 0; i < scores.length; i++) {
+            JSONObject obj = new JSONObject();
+            if (scores[i] != null) {
+                obj.put("name", scores[i].getName());
+                obj.put("time", scores[i].getTime());
+            }
+
+            arr.add(obj);
+        }
+
+        return arr;
     }
 }

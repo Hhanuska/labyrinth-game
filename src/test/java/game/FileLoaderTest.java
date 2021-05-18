@@ -14,11 +14,4 @@ public class FileLoaderTest {
 
         assertNotNull(FileLoader.getLevel());
     }
-
-    @Test
-    public void testLoadHighscores() throws IOException {
-        FileLoader.loadHighScores();
-
-        assertNotNull(FileLoader.getHighScores());
-    }
 }

@@ -3,6 +3,7 @@ package game.UI;
 import java.io.IOException;
 
 import game.FileLoader;
+import game.model.HighScore;
 import game.model.HighScores;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,9 +24,9 @@ public class MazeApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        highScores = new HighScores();
+        highScores.setScores(new HighScore[5]);
         FileLoader.loadLevel();
-        FileLoader.loadHighScores();
-        highScores = FileLoader.getHighScores();
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
         stage.setTitle("Maze Game");
@@ -54,5 +55,9 @@ public class MazeApplication extends Application {
 
     public static HighScores getHighScores() {
         return highScores;
+    }
+
+    public static void setHighScores(HighScores hs) {
+        highScores = hs;
     }
 }

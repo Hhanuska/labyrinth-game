@@ -29,9 +29,9 @@ public class FileLoader {
     /**
      * Loads the high scores.
      */
-    public static void loadHighScores() throws IOException {
+    public static void loadHighScores(String path) throws IOException {
         highScores = OBJECT_MAPPER.readValue(
-                FileLoader.class.getResourceAsStream("highscores.json"), HighScores.class
+                new File(path), HighScores.class
         );
     }
 

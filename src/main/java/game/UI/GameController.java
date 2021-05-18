@@ -176,38 +176,12 @@ public class GameController {
 
         MazeApplication.getHighScores().addScore(new HighScore(MazeApplication.getName(), stopwatch.millisProperty().get()));
 
-        try {
-            file = new FileWriter("target/classes/game/highscores.json");
-
-            JSONObject obj = new JSONObject();
-            obj.put("scores", scoresToJson());
-
-            file.write(obj.toJSONString());
-        } catch (IOException e) {
-            Logger.error(e);
-        } finally {
+        if (MazeApplication.getHighScores().getFilePath().get() != null) {
             try {
-                file.flush();
-                file.close();
+                MazeApplication.getHighScores().save();
             } catch (IOException e) {
                 Logger.error(e);
             }
         }
-    }
-
-    private JSONArray scoresToJson() {
-        JSONArray arr = new JSONArray();
-
-        for (int i = 0; i < MazeApplication.getHighScores().getScores().length; i++) {
-            JSONObject obj = new JSONObject();
-            if (MazeApplication.getHighScores().getScores()[i] != null) {
-                obj.put("name", MazeApplication.getHighScores().getScores()[i].getName());
-                obj.put("time", MazeApplication.getHighScores().getScores()[i].getTime());
-            }
-
-            arr.add(obj);
-        }
-
-        return arr;
     }
 }

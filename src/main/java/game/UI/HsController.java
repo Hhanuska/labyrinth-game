@@ -1,5 +1,6 @@
 package game.UI;
 
+import game.FileLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.tinylog.Logger;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -24,13 +30,15 @@ public class HsController {
 
     @FXML
     private void initialize() {
+        board.getChildren().clear();
+
         for (int i = 1; i < board.getRowCount(); i++) {
             addScore(i);
         }
     }
 
     private void addScore(int i) {
-        if(MazeApplication.getHighScores().getScores().length == 0) {
+        if(MazeApplication.getHighScores() == null || MazeApplication.getHighScores().getScores().length == 0) {
             return;
         }
 
@@ -62,5 +70,48 @@ public class HsController {
         stage.show();
 
         MazeApplication.setScene(scene);
+    }
+
+    @FXML
+    private void handleSaveAs(ActionEvent event) {
+        performSaveAs();
+    }
+
+    @FXML
+    private void handleLoad(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open save file");
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            Logger.debug("Opening file {}", file);
+            try {
+                FileLoader.loadHighScores(file.getPath());
+
+                MazeApplication.setHighScores(FileLoader.getHighScores());
+
+                MazeApplication.getHighScores().getFilePath().set(file.getPath());
+
+                initialize();
+            } catch (IOException e) {
+                Logger.error("Failed to open file");
+            }
+        }
+    }
+
+    private void performSaveAs() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save As");
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            Logger.debug("Saving file as {}", file);
+
+            try {
+                MazeApplication.getHighScores().saveAs(file.getPath());
+            } catch (IOException e) {
+                Logger.error(e, "Failed to save file");
+            }
+        }
     }
 }
