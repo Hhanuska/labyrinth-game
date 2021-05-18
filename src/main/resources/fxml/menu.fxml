@@ -46,7 +46,7 @@
           <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Enter username (min. 3 characters)" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Enter username (3-16 characters)" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
             <TextField fx:id="nameField" promptText="Enter username" GridPane.rowIndex="1" />
          </children>
       </GridPane>

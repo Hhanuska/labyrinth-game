@@ -27,7 +27,7 @@ public class MenuController {
     @FXML
     private void handleStart(ActionEvent event) throws IOException {
         String name = nameField.getText();
-        if (name.length() < 3) {
+        if (name.length() < 3 || name.length() > 16) {
             return;
         }
         MazeApplication.setName(name);
