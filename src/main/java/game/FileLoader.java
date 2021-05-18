@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import game.model.HighScores;
 import game.model.Maze;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Class responsible for loading mazes and high scores.
@@ -31,7 +32,7 @@ public class FileLoader {
      */
     public static void loadHighScores(String path) throws IOException {
         highScores = OBJECT_MAPPER.readValue(
-                new File(path), HighScores.class
+                Files.readString(Path.of(path)), HighScores.class
         );
     }
 
